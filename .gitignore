@@ -1,0 +1,9 @@
+djenv/
+.env
+__pycache__/
+*.py[cod]
+db.sqlite3
+.pytest_cache/
+static/
+.idea/
+.vscode/
