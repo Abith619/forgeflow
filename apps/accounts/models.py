@@ -1,8 +1,8 @@
 from django.db import models
+from django.db.models import Q
 from apps.core.models import TimeStampedModel
-from django.contrib.auth.models import BaseUserManager
 from django.utils import timezone
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
 class Company(TimeStampedModel):
     name = models.CharField(max_length=200)
@@ -12,9 +12,12 @@ class Company(TimeStampedModel):
     def __str__(self):
         return self.name
 
-    class Meta():
+    class Meta:
         ordering = ["name"]
         verbose_name_plural = "Companies"
+        constraints = [
+            models.CheckConstraint(condition=~Q(code=""), name="company_code_not_empty"),
+        ]
 
 class UserManager(BaseUserManager):
 
@@ -45,7 +48,7 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     full_name = models.CharField(max_length=150, blank=False)
-    company = models.ForeignKey(Company, on_delete=models.PROTECT, related_name="users", null=True, blank=True)
+    company = models.ForeignKey(Company, on_delete=models.PROTECT, related_name="users", null=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
