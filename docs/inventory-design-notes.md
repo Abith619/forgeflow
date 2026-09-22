@@ -414,3 +414,71 @@ behaviour in one file is exactly where a silent 500 comes from.
 - No GET/list endpoint for moves or quants yet.
 - `Company.name` has no non-empty constraint.
 - `retry` pip package installed then abandoned — remove from requirements if listed.
+
+---
+
+## 12. Accounts hardening (18 Sep 2026) — closes two items from §11
+
+### `UserManager.create_user` now normalises `company`
+
+`createsuperuser` hands `REQUIRED_FIELDS` values as **raw pks**, so it passes
+`company=1`. Assigning an int to a FK attribute raises
+`ValueError: must be a "Company" instance`. The manager routes by type:
+
+- `None` → `raise ValueError("Company is required")`
+- a `Company` instance → `extra_fields["company"] = company`
+- anything else (a pk) → resolve with `Company.objects.get(pk=...)`
+
+The underlying rule: **`company` accepts an instance, `company_id` accepts a raw
+pk.** Same distinction that bites when calling `Model.objects.create()`.
+`company` is popped from `extra_fields`, so whichever branch runs must put the
+resolved value *back* into `extra_fields` — a dangling local is the failure mode
+here (and it happened three times in one session: a function with no `return`, a
+`get_or_create` bound to a new name, and this).
+
+Resolving with `.get()` rather than assigning `company_id` directly is a
+deliberate choice: an invalid pk fails immediately with `DoesNotExist` instead of
+later as a FK `IntegrityError` at save time. Costs one query per user creation,
+which is irrelevant at that call rate.
+
+`REQUIRED_FIELDS = ["company"]` so `createsuperuser` prompts for it at all.
+
+### System user — `accounts/0005_create_system_user`
+
+`StockMove.user` is non-null, so any caller without a logged-in human (SAP import,
+scheduled reorder, data migration) needs an account. Created by data migration so
+it exists in every environment without manual setup.
+
+- `email="system@internal"`, `is_active=False`, `password="!"` (Django's unusable-
+  password marker) — belt and braces on an account that must never authenticate.
+- Its own `SYSTEM` company via `get_or_create`, **not** a customer's. An internal
+  account inside Acme's tenant would appear in Acme's user list.
+- `get_or_create` throughout, so the migration is idempotent.
+
+**The rule this migration exists to satisfy:** `migrate` on an **empty** database
+must succeed unattended. A first attempt used
+`Company.objects.get(code="ACME")` — it passed locally because Acme happened to
+exist, and would have failed on any fresh clone or CI run. A data migration must
+create everything it depends on; otherwise it is a script that happens to live in
+the migrations folder.
+
+Two mechanics worth remembering:
+- `apps.get_model()`, never a top-level model import — a migration must run against
+  the *historical* model, or it breaks the day a required field is added. The
+  historical model carries fields and Meta only: no custom manager, no
+  `set_password`, no `set_unusable_password`.
+- **Reversing a `RunPython` does not undo the data** unless the reverse says so.
+  With `RunPython.noop`, unapplying 0005 removed the migration record and left the
+  user row — so re-running found the stale row and skipped creation, reporting
+  success while leaving the wrong state. Seed data needs clearing by hand before a
+  re-run. `noop` is usually the right reverse (PROTECT would block the delete once
+  moves reference the user), but it is a one-way door.
+
+### Remaining open
+
+- Read endpoints (`GET quants/`, `GET moves/`) — `get_queryset()` scoping,
+  `select_related` for N+1, pagination.
+- React frontend — will need `django-cors-headers`.
+- `reference` as a real document FK (deferred by decision).
+- `Company.name` has no non-empty constraint.
+- `retry` pip package installed then abandoned — remove from requirements if listed.

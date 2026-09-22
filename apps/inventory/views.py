@@ -1,9 +1,11 @@
 from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework.exceptions import ValidationError as DRFValidationError
-from apps.inventory.serializers import StockMoveRequestSerializer, StockMoveSerializer
+from apps.inventory.serializers import StockMoveRequestSerializer, StockMoveSerializer, StockQuantSerializer
+from apps.inventory.models import StockQuant
 from apps.inventory.services import move_stock
 
 class StockMoveCreateView(APIView):
@@ -22,3 +24,9 @@ class StockMoveCreateView(APIView):
             raise DRFValidationError(e.message_dict if hasattr(e, "message_dict") else e.messages)
 
         return Response(StockMoveSerializer(move).data, status=status.HTTP_201_CREATED)
+
+class StockQuantListView(ListAPIView):
+    serializer_class = StockQuantSerializer
+
+    def get_queryset(self):
+        return StockQuant.objects.filter(company=self.request.user.company).select_related("product", "location")

@@ -1,2 +1,5 @@
 django-extensions==4.1
 ipython
+pytest
+pytest-django
+factory_boy

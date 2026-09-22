@@ -25,6 +25,9 @@ class UserManager(BaseUserManager):
         if not email:
             raise ValueError("Email is required")
         email = self.normalize_email(email)
+        company_id = extra_fields.pop("company", None)
+        company = Company.objects.get(pk=company_id)
+        extra_fields["company"] = company
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
@@ -54,7 +57,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(default=timezone.now)
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['company']
     objects = UserManager()
 
     def __str__(self):

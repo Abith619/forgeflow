@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from apps.catalog.models import Product
-from apps.inventory.models import Location, StockMove
+from apps.inventory.models import Location, StockMove, StockQuant
 
 class StockMoveRequestSerializer(serializers.Serializer):
 
@@ -28,3 +28,13 @@ class StockMoveSerializer(serializers.ModelSerializer):
     class Meta:
         model = StockMove
         fields = ["id", "product", "from_location", "to_location", "quantity", "reference", "notes", "user", "created_at"]
+
+class StockQuantSerializer(serializers.ModelSerializer):
+
+    available_quantity = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    product_name = serializers.CharField(source="product.name", read_only=True)
+    location_name = serializers.CharField(source="location.name", read_only=True)
+
+    class Meta:
+        model = StockQuant
+        fields = ["id", "product", 'product_name', "location", 'location_name', "quantity", "reserved_qty", "available_quantity"]
