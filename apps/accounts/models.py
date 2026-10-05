@@ -25,8 +25,13 @@ class UserManager(BaseUserManager):
         if not email:
             raise ValueError("Email is required")
         email = self.normalize_email(email)
-        company_id = extra_fields.pop("company", None)
-        company = Company.objects.get(pk=company_id)
+        company = extra_fields.pop("company", None)
+        if company is None:
+            raise ValueError("Company is required")
+        if isinstance(company, Company):
+            pass
+        else:
+            company = Company.objects.get(pk=company)
         extra_fields["company"] = company
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
