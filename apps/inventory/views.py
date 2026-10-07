@@ -7,6 +7,7 @@ from rest_framework.exceptions import ValidationError as DRFValidationError
 from apps.inventory.serializers import StockMoveRequestSerializer, StockMoveSerializer, StockQuantSerializer
 from apps.inventory.models import StockQuant
 from apps.inventory.services import move_stock
+from apps.core.mixins import CompanyScopedQuerysetMixin
 
 class StockMoveCreateView(APIView):
     def post(self, request):
@@ -25,8 +26,8 @@ class StockMoveCreateView(APIView):
 
         return Response(StockMoveSerializer(move).data, status=status.HTTP_201_CREATED)
 
-class StockQuantListView(ListAPIView):
+class StockQuantListView(CompanyScopedQuerysetMixin, ListAPIView):
     serializer_class = StockQuantSerializer
 
-    def get_queryset(self):
-        return StockQuant.objects.filter(company=self.request.user.company).select_related("product", "location")
+    queryset = StockQuant.objects.select_related("product", "location")
+    
