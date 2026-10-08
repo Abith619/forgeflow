@@ -15,12 +15,14 @@ class UoMFactory(DjangoModelFactory):
     code = factory.Sequence(lambda n: f"UoM-{n}")
     unit_of_measure = factory.Iterator(["kg", "g", "mg", "mcg", "iu", "other"])
 
+
 class ProductCategoryFactory(DjangoModelFactory):
     class Meta:
         model = ProductCategory
-    
+
     name = factory.Sequence(lambda n: f"Category {n}")
     parent = None
+
 
 class ProductFactory(DjangoModelFactory):
     class Meta:

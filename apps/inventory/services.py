@@ -5,35 +5,46 @@ from psycopg.errors import DeadlockDetected
 from apps.inventory.models import StockMove, StockQuant
 
 MAX_MOVE_RETRIES = 3
-def move_stock(*, product, from_location, to_location, quantity, company, user, reference='', notes=''):
+
+
+def move_stock(
+    *,
+    product,
+    from_location,
+    to_location,
+    quantity,
+    company,
+    user,
+    reference="",
+    notes="",
+):
     if quantity <= 0:
         raise ValidationError("Quantity must be greater than 0")
     if from_location == to_location:
         raise ValidationError("From location and to location cannot be same")
     if product.company_id != company.id:
-        raise ValidationError(
-            "Product does not belong to the specified company"
-        )
+        raise ValidationError("Product does not belong to the specified company")
 
     if from_location.company_id != company.id:
-        raise ValidationError(
-            "From location does not belong to the specified company"
-        )
+        raise ValidationError("From location does not belong to the specified company")
 
     if to_location.company_id != company.id:
-        raise ValidationError(
-            "To location does not belong to the specified company"
-        )
+        raise ValidationError("To location does not belong to the specified company")
 
     for attempt in range(MAX_MOVE_RETRIES):
         try:
             with transaction.atomic():
-                stock_quants = list(StockQuant.objects.select_for_update().filter(company=company, product=product, location__in=[from_location, to_location]).order_by("location_id"))
+                stock_quants = list(
+                    StockQuant.objects.select_for_update()
+                    .filter(
+                        company=company,
+                        product=product,
+                        location__in=[from_location, to_location],
+                    )
+                    .order_by("location_id")
+                )
 
-                quants = {
-                    quant.location : quant
-                    for quant in stock_quants
-                }
+                quants = {quant.location: quant for quant in stock_quants}
 
                 source = quants.get(from_location)
                 destination = quants.get(to_location)
@@ -42,7 +53,9 @@ def move_stock(*, product, from_location, to_location, quantity, company, user, 
                     raise ValidationError("Insufficient stock at source")
 
                 if source == destination:
-                    raise ValidationError("From location and to location cannot be same")
+                    raise ValidationError(
+                        "From location and to location cannot be same"
+                    )
 
                 if not destination:
                     with transaction.atomic():
@@ -55,7 +68,9 @@ def move_stock(*, product, from_location, to_location, quantity, company, user, 
                                 "reserved_qty": 0,
                             },
                         )
-                        destination = StockQuant.objects.select_for_update().get(pk=destination.id)
+                        destination = StockQuant.objects.select_for_update().get(
+                            pk=destination.id
+                        )
 
                 if source.available_quantity < quantity:
                     raise ValidationError("Insufficient stock")

@@ -32,17 +32,14 @@ class RegisterView(APIView):
         )
 
 
-
 class MeView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        return Response(
-            MeSerializer(request.user).data
-        )
+        return Response(MeSerializer(request.user).data)
+
 
 class LogoutView(APIView):
-
     def post(self, request):
         serializer = LogoutSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -74,4 +71,3 @@ class LogoutView(APIView):
             )
 
         return Response(status=status.HTTP_205_RESET_CONTENT)
-

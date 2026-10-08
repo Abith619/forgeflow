@@ -51,10 +51,11 @@ a method on `StockQuant` can only see one row.
 One query, evaluated, ordered:
 
 ```python
-list(StockQuant.objects.select_for_update()
-     .filter(company=company, product=product,
-             location__in=[from_location, to_location])
-     .order_by("location_id"))
+list(
+    StockQuant.objects.select_for_update()
+    .filter(company=company, product=product, location__in=[from_location, to_location])
+    .order_by("location_id")
+)
 ```
 
 then keyed into a dict by `location_id` so source and destination are named

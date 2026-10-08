@@ -5,7 +5,6 @@ from apps.inventory.models import Location, StockMove, StockQuant
 
 
 class StockMoveRequestSerializer(serializers.Serializer):
-
     product = serializers.PrimaryKeyRelatedField(queryset=Product.objects.none())
     from_location = serializers.PrimaryKeyRelatedField(queryset=Location.objects.none())
     to_location = serializers.PrimaryKeyRelatedField(queryset=Location.objects.none())
@@ -26,17 +25,39 @@ class StockMoveRequestSerializer(serializers.Serializer):
         self.fields["from_location"].queryset = Location.objects.filter(company=company)
         self.fields["to_location"].queryset = Location.objects.filter(company=company)
 
+
 class StockMoveSerializer(serializers.ModelSerializer):
     class Meta:
         model = StockMove
-        fields = ["id", "product", "from_location", "to_location", "quantity", "reference", "notes", "user", "created_at"]
+        fields = [
+            "id",
+            "product",
+            "from_location",
+            "to_location",
+            "quantity",
+            "reference",
+            "notes",
+            "user",
+            "created_at",
+        ]
+
 
 class StockQuantSerializer(serializers.ModelSerializer):
-
-    available_quantity = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    available_quantity = serializers.DecimalField(
+        max_digits=10, decimal_places=2, read_only=True
+    )
     product_name = serializers.CharField(source="product.name", read_only=True)
     location_name = serializers.CharField(source="location.name", read_only=True)
 
     class Meta:
         model = StockQuant
-        fields = ["id", "product", 'product_name', "location", 'location_name', "quantity", "reserved_qty", "available_quantity"]
+        fields = [
+            "id",
+            "product",
+            "product_name",
+            "location",
+            "location_name",
+            "quantity",
+            "reserved_qty",
+            "available_quantity",
+        ]

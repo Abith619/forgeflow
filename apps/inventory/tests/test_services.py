@@ -19,6 +19,7 @@ def test_quant_factory_keeps_one_company():
     assert quant.location.warehouse.company == quant.company
     assert quant.product.company == quant.company
 
+
 @pytest.mark.django_db(transaction=True)
 def test_move_stock_sufficient_stock(
     product,
@@ -64,6 +65,7 @@ def test_move_stock_sufficient_stock(
     # Assert 5: movement locations
     assert move.from_location == quant.location
     assert move.to_location == dest_location
+
 
 @pytest.mark.django_db(transaction=True)
 def test_move_stock_insufficient_stock_changes_nothing(
@@ -123,7 +125,9 @@ def test_move_stock_rejects_location_from_other_company():
     assert destination_location.company_id != company_a.id
 
     # Act
-    with pytest.raises(ValidationError, match="To location does not belong to the specified company"):
+    with pytest.raises(
+        ValidationError, match="To location does not belong to the specified company"
+    ):
         move_stock(
             product=product,
             from_location=source_location,

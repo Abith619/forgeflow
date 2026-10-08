@@ -17,7 +17,9 @@ from apps.inventory.services import move_stock
 
 class StockMoveCreateView(APIView):
     def post(self, request):
-        serializer = StockMoveRequestSerializer(data=request.data, context={"request": request})
+        serializer = StockMoveRequestSerializer(
+            data=request.data, context={"request": request}
+        )
         if serializer:
             serializer.is_valid(raise_exception=True)
 
@@ -28,12 +30,14 @@ class StockMoveCreateView(APIView):
                 company=request.user.company,
             )
         except DjangoValidationError as e:
-            raise DRFValidationError(e.message_dict if hasattr(e, "message_dict") else e.messages)
+            raise DRFValidationError(
+                e.message_dict if hasattr(e, "message_dict") else e.messages
+            )
 
         return Response(StockMoveSerializer(move).data, status=status.HTTP_201_CREATED)
+
 
 class StockQuantListView(CompanyScopedQuerysetMixin, ListAPIView):
     serializer_class = StockQuantSerializer
 
     queryset = StockQuant.objects.select_related("product", "location")
-    

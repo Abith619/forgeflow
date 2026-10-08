@@ -9,15 +9,26 @@ class UoMAdmin(admin.ModelAdmin):
     search_fields = ["name", "code"]
     list_filter = ["unit_of_measure"]
 
+
 @admin.register(ProductCategory)
 class ProductCategoryAdmin(admin.ModelAdmin):
     list_display = ["name", "parent"]
     search_fields = ["name"]
     list_filter = ["parent"]
 
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['sku', 'name', 'category', 'uom', 'company', 'cost_price', 'sale_price', 'is_active']
-    search_fields = ['sku', 'name']
-    list_filter = ['type','is_active', 'company']
-    list_select_related = ['category', 'uom', 'company']
+    list_display = [
+        "sku",
+        "name",
+        "category",
+        "uom",
+        "company",
+        "cost_price",
+        "sale_price",
+        "is_active",
+    ]
+    search_fields = ["sku", "name"]
+    list_filter = ["type", "is_active", "company"]
+    list_select_related = ["category", "uom", "company"]

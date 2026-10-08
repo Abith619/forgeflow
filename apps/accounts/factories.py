@@ -11,6 +11,7 @@ class CompanyFactory(DjangoModelFactory):
     name = factory.Sequence(lambda n: f"Company {n}")
     code = factory.Sequence(lambda n: f"C-{n}")
 
+
 class UserFactory(DjangoModelFactory):
     class Meta:
         model = User

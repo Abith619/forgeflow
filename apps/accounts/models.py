@@ -22,11 +22,13 @@ class Company(TimeStampedModel):
         ordering = ["name"]
         verbose_name_plural = "Companies"
         constraints = [
-            models.CheckConstraint(condition=~Q(code=""), name="company_code_not_empty"),
+            models.CheckConstraint(
+                condition=~Q(code=""), name="company_code_not_empty"
+            ),
         ]
 
-class UserManager(BaseUserManager):
 
+class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
             raise ValueError("Email is required")
@@ -43,6 +45,7 @@ class UserManager(BaseUserManager):
         user.set_password(password)
         user.save(using=self._db)
         return user
+
     def unlink_user(self, user):
         if user:
             return "You cannot delete any user"
@@ -59,16 +62,19 @@ class UserManager(BaseUserManager):
             raise ValueError("Superuser must have is_active=True.")
         return self.create_user(email, password, **extra_fields)
 
+
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     full_name = models.CharField(max_length=150, blank=False)
-    company = models.ForeignKey(Company, on_delete=models.PROTECT, related_name="users", null=False)
+    company = models.ForeignKey(
+        Company, on_delete=models.PROTECT, related_name="users", null=False
+    )
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ['company']
+    REQUIRED_FIELDS = ["company"]
     objects = UserManager()
 
     def __str__(self):

@@ -1,5 +1,3 @@
-
-
 class CompanyScopedQuerysetMixin:
     company_field = "company"
 

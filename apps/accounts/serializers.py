@@ -27,15 +27,13 @@ class RegisterSerializer(serializers.Serializer):
 
     def validate(self, attrs):
         user = User(
-            email=attrs['email'],
-            full_name=attrs['full_name'],
+            email=attrs["email"],
+            full_name=attrs["full_name"],
         )
         try:
-            validate_password(attrs['password'], user=user)
+            validate_password(attrs["password"], user=user)
         except DjangoValidationError as exc:
-            raise serializers.ValidationError(
-                {"password": exc.messages}
-            )
+            raise serializers.ValidationError({"password": exc.messages})
         return attrs
 
     def create(self, validated_data):
@@ -55,17 +53,20 @@ class RegisterSerializer(serializers.Serializer):
 
         return user
 
+
 class CompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
         fields = ["id", "name", "code"]
+
 
 class MeSerializer(serializers.ModelSerializer):
     company = CompanySerializer(read_only=True)
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'full_name', 'company']
+        fields = ["id", "email", "full_name", "company"]
+
 
 class LogoutSerializer(serializers.Serializer):
     refresh = serializers.CharField(required=True)

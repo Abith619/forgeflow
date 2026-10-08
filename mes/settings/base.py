@@ -3,13 +3,13 @@ from pathlib import Path
 import environ
 
 BASE_DIR = Path(__file__).resolve().parents[2]
-environ.Env.read_env(Path(BASE_DIR, '.env'))
+environ.Env.read_env(Path(BASE_DIR, ".env"))
 
 env = environ.Env()
 
-SECRET_KEY = env('SECRET_KEY')
-DEBUG = env.bool('DEBUG', False)
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+SECRET_KEY = env("SECRET_KEY")
+DEBUG = env.bool("DEBUG", False)
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -34,7 +34,8 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
     ],
-    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination", "PAGE_SIZE": 25,
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 25,
 }
 
 MIDDLEWARE = [
@@ -46,7 +47,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
-ROOT_URLCONF = 'mes.urls'
+ROOT_URLCONF = "mes.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -61,10 +62,8 @@ TEMPLATES = [
         },
     },
 ]
-WSGI_APPLICATION = 'mes.wsgi.application'
-DATABASES = {
-    'default': env.db()
-}
+WSGI_APPLICATION = "mes.wsgi.application"
+DATABASES = {"default": env.db()}
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
