@@ -1,5 +1,7 @@
+-r base.txt
 django-extensions==4.1
-ipython
-pytest
-pytest-django
-factory_boy
+ipython==9.17.0
+pytest==9.1.1
+pytest-django==4.14.0
+factory_boy==3.3.3
+ruff==0.16.10
