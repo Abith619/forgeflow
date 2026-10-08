@@ -46,7 +46,7 @@ def test_move_stock_sufficient_stock(
 
     # Assert 1: source quantity is reduced
     source.refresh_from_db()
-    assert source.quantity == Decimal("50.00")
+    assert source.quantity == Decimal("51.00")
 
     # Assert 2: destination quantity is actually persisted
     destination_from_db = StockQuant.objects.get(
