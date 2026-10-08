@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    env:
+      SECRET_KEY: ci-secret-key
+      DEBUG: "False"
+      ALLOWED_HOSTS: localhost
+      DATABASE_URL: postgres://mes_ci:mes_ci_password@localhost:5434/mes_ci
+
+    services:
+      postgres:
+        image: postgres:17-alpine
+        ports:
+          - 5434:5432
+        env:
+          POSTGRES_USER: mes_ci
+          POSTGRES_PASSWORD: mes_ci_password
+          POSTGRES_DB: mes_ci
+        options: >-
+          --health-cmd "pg_isready -U mes_ci"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version-file: .python-version
+          cache: "pip"
+          cache-dependency-path: requirements/*.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements/dev.txt
+
+      - name: Ruff check
+        run: ruff check .
+
+      - name: Ruff format
+        run: ruff format --check .
+
+      - name: Check migrations
+        run: python manage.py makemigrations --check --dry-run
+
+      - name: Pytest
+        run: pytest
