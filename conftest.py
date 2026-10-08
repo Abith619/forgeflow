@@ -1,6 +1,6 @@
 import pytest
 from apps.accounts.factories import UserFactory, CompanyFactory
-from apps.catalog.factories import ProductFactory, UoMFactory, ProductCategoryFactory
+from apps.catalog.factories import ProductFactory, UoMFactory
 from apps.inventory.factories import WarehouseFactory, LocationFactory, StockQuantFactory
 
 @pytest.fixture
@@ -20,10 +20,6 @@ def uom():
     return UoMFactory()
 
 @pytest.fixture
-def product_category(company):
-    return ProductCategoryFactory(company=company)
-
-@pytest.fixture
 def warehouse(company):
     return WarehouseFactory(company=company)
 
@@ -36,5 +32,5 @@ def dest_location(warehouse):
     return LocationFactory(warehouse=warehouse)
 
 @pytest.fixture
-def stock_quant(location, product):
-    return StockQuantFactory(location=location, product=product)
+def stock_quant(source_location, product):
+    return StockQuantFactory(location=source_location, product=product)

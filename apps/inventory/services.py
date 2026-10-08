@@ -9,6 +9,21 @@ def move_stock(*, product, from_location, to_location, quantity, company, user, 
         raise ValidationError("Quantity must be greater than 0")
     if from_location == to_location:
         raise ValidationError("From location and to location cannot be same")
+    if product.company_id != company.id:
+        raise ValidationError(
+            "Product does not belong to the specified company"
+        )
+
+    if from_location.company_id != company.id:
+        raise ValidationError(
+            "From location does not belong to the specified company"
+        )
+
+    if to_location.company_id != company.id:
+        raise ValidationError(
+            "To location does not belong to the specified company"
+        )
+
     for attempt in range(MAX_MOVE_RETRIES):
         try:
             with transaction.atomic():
