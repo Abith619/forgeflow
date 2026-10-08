@@ -2,6 +2,7 @@
 
 from django.db import migrations
 
+
 def create_system_user(apps, schema_editor):
     Company = apps.get_model("accounts", "Company")
     User = apps.get_model("accounts", "User")

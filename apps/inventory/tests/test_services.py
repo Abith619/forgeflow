@@ -1,11 +1,14 @@
 from decimal import Decimal
+
 import pytest
-from apps.inventory.factories import StockQuantFactory, LocationFactory
-from apps.inventory.services import move_stock
-from apps.inventory.models import StockMove, StockQuant
+from django.core.exceptions import ValidationError
+
 from apps.accounts.factories import CompanyFactory, UserFactory
 from apps.catalog.factories import ProductFactory
-from django.core.exceptions import ValidationError
+from apps.inventory.factories import LocationFactory, StockQuantFactory
+from apps.inventory.models import StockMove, StockQuant
+from apps.inventory.services import move_stock
+
 
 @pytest.mark.django_db
 def test_quant_factory_keeps_one_company():
@@ -31,7 +34,7 @@ def test_move_stock_sufficient_stock(
     )
 
     # Act
-    move, source, destination = move_stock(
+    move, source, _destination = move_stock(
         product=product,
         from_location=source_location,
         to_location=dest_location,
@@ -110,14 +113,6 @@ def test_move_stock_rejects_location_from_other_company():
     company_a = CompanyFactory()
     product = ProductFactory(company=company_a)
     source_location = LocationFactory(warehouse__company=company_a)
-
-    source_quant = StockQuantFactory(
-        company=company_a,
-        product=product,
-        location=source_location,
-        quantity=100,
-        reserved_qty=0,
-    )
 
     # No company argument -> creates a location belonging to another company
     destination_location = LocationFactory()

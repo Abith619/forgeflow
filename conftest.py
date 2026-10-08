@@ -1,7 +1,13 @@
 import pytest
-from apps.accounts.factories import UserFactory, CompanyFactory
+
+from apps.accounts.factories import CompanyFactory, UserFactory
 from apps.catalog.factories import ProductFactory, UoMFactory
-from apps.inventory.factories import WarehouseFactory, LocationFactory, StockQuantFactory
+from apps.inventory.factories import (
+    LocationFactory,
+    StockQuantFactory,
+    WarehouseFactory,
+)
+
 
 @pytest.fixture
 def company():

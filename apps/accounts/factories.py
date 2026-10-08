@@ -1,6 +1,8 @@
-from factory.django import DjangoModelFactory
-from apps.accounts.models import Company, User
 import factory
+from factory.django import DjangoModelFactory
+
+from apps.accounts.models import Company, User
+
 
 class CompanyFactory(DjangoModelFactory):
     class Meta:

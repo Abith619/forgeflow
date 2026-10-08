@@ -1,8 +1,14 @@
+from django.contrib.auth.models import (
+    AbstractBaseUser,
+    BaseUserManager,
+    PermissionsMixin,
+)
 from django.db import models
 from django.db.models import Q
-from apps.core.models import TimeStampedModel
 from django.utils import timezone
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+
+from apps.core.models import TimeStampedModel
+
 
 class Company(TimeStampedModel):
     name = models.CharField(max_length=200)

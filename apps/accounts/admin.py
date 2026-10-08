@@ -1,6 +1,8 @@
 from django.contrib import admin
-from .models import Company, User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+
+from .models import Company, User
+
 
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):

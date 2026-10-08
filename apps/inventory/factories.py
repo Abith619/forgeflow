@@ -1,10 +1,12 @@
-from apps.inventory.models import StockQuant, Warehouse, Location
-from factory.django import DjangoModelFactory
-import factory
 from decimal import Decimal
+
+import factory
+from factory.django import DjangoModelFactory
+
 from apps.accounts.factories import CompanyFactory
 from apps.catalog.factories import ProductFactory
-from apps.accounts.factories import UserFactory
+from apps.inventory.models import Location, StockQuant, Warehouse
+
 
 class WarehouseFactory(DjangoModelFactory):
     class Meta:

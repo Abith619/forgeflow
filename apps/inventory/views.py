@@ -1,13 +1,19 @@
-from rest_framework.views import APIView
+from django.core.exceptions import ValidationError as DjangoValidationError
+from rest_framework import status
+from rest_framework.exceptions import ValidationError as DRFValidationError
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
-from rest_framework import status
-from django.core.exceptions import ValidationError as DjangoValidationError
-from rest_framework.exceptions import ValidationError as DRFValidationError
-from apps.inventory.serializers import StockMoveRequestSerializer, StockMoveSerializer, StockQuantSerializer
-from apps.inventory.models import StockQuant
-from apps.inventory.services import move_stock
+from rest_framework.views import APIView
+
 from apps.core.mixins import CompanyScopedQuerysetMixin
+from apps.inventory.models import StockQuant
+from apps.inventory.serializers import (
+    StockMoveRequestSerializer,
+    StockMoveSerializer,
+    StockQuantSerializer,
+)
+from apps.inventory.services import move_stock
+
 
 class StockMoveCreateView(APIView):
     def post(self, request):
@@ -16,7 +22,7 @@ class StockMoveCreateView(APIView):
             serializer.is_valid(raise_exception=True)
 
         try:
-            move, source, destination = move_stock(
+            move, _source, _destination = move_stock(
                 **serializer.validated_data,
                 user=request.user,
                 company=request.user.company,

@@ -1,8 +1,10 @@
-from django.db import models
-from apps.core.models import TimeStampedModel
-from django.core.exceptions import ValidationError
-from django.db.models import Q, F
 from django.conf import settings
+from django.core.exceptions import ValidationError
+from django.db import models
+from django.db.models import F, Q
+
+from apps.core.models import TimeStampedModel
+
 
 class Warehouse(TimeStampedModel):
     company = models.ForeignKey("accounts.company", on_delete=models.PROTECT)

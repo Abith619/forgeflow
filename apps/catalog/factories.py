@@ -1,8 +1,11 @@
-from factory.django import DjangoModelFactory
-from apps.catalog.models import UoM, ProductCategory, Product
-from apps.accounts.factories import CompanyFactory
-import factory
 from decimal import Decimal
+
+import factory
+from factory.django import DjangoModelFactory
+
+from apps.accounts.factories import CompanyFactory
+from apps.catalog.models import Product, ProductCategory, UoM
+
 
 class UoMFactory(DjangoModelFactory):
     class Meta:

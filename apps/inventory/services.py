@@ -1,7 +1,8 @@
-from django.db import transaction, OperationalError
-from psycopg.errors import DeadlockDetected
-from apps.inventory.models import StockQuant, StockMove
 from django.core.exceptions import ValidationError
+from django.db import OperationalError, transaction
+from psycopg.errors import DeadlockDetected
+
+from apps.inventory.models import StockMove, StockQuant
 
 MAX_MOVE_RETRIES = 3
 def move_stock(*, product, from_location, to_location, quantity, company, user, reference='', notes=''):
@@ -45,7 +46,7 @@ def move_stock(*, product, from_location, to_location, quantity, company, user, 
 
                 if not destination:
                     with transaction.atomic():
-                        destination, created = StockQuant.objects.get_or_create(
+                        destination, _created = StockQuant.objects.get_or_create(
                             company=company,
                             product=product,
                             location=to_location,

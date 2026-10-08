@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Warehouse, Location, StockQuant, StockMove
+
+from .models import Location, StockMove, StockQuant, Warehouse
+
 
 @admin.register(Warehouse)
 class WarehouseAdmin(admin.ModelAdmin):

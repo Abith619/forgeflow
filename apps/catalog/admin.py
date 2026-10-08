@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import UoM, ProductCategory, Product
+
+from .models import Product, ProductCategory, UoM
+
 
 @admin.register(UoM)
 class UoMAdmin(admin.ModelAdmin):
