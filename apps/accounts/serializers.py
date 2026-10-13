@@ -68,5 +68,10 @@ class MeSerializer(serializers.ModelSerializer):
         fields = ["id", "email", "full_name", "company"]
 
 
-class LogoutSerializer(serializers.Serializer):
-    refresh = serializers.CharField(required=True)
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+    password = serializers.CharField(
+        required=True,
+        write_only=True,
+        trim_whitespace=False,
+    )

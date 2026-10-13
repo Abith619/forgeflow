@@ -1,3 +1,4 @@
+from datetime import timedelta
 from pathlib import Path
 
 import environ
@@ -100,3 +101,14 @@ STATIC_ROOT = BASE_DIR / "static"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "accounts.User"
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+}
+
+REFRESH_COOKIE_NAME = "refresh_token"
+REFRESH_COOKIE_PATH = "/api/accounts/"
+REFRESH_COOKIE_SECURE = env.bool("REFRESH_COOKIE_SECURE", default=True)
