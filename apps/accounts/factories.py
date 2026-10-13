@@ -1,7 +1,7 @@
 import factory
 from factory.django import DjangoModelFactory
 
-from apps.accounts.models import Company, User
+from .models import Company, User
 
 
 class CompanyFactory(DjangoModelFactory):
@@ -15,6 +15,7 @@ class CompanyFactory(DjangoModelFactory):
 class UserFactory(DjangoModelFactory):
     class Meta:
         model = User
+        skip_postgeneration_save = True
 
     email = factory.Sequence(lambda n: f"email{n}@example.com")
     full_name = factory.Sequence(lambda n: f"User {n}")
@@ -22,3 +23,11 @@ class UserFactory(DjangoModelFactory):
     is_active = True
     is_staff = False
     is_superuser = False
+
+    @factory.post_generation
+    def password(self, create, extracted, **kwargs):
+        raw_password = extracted or "TestPassword123!"
+        self.set_password(raw_password)
+
+        if create:
+            self.save(update_fields=["password"])
