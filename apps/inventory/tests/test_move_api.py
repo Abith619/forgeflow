@@ -4,13 +4,13 @@ from django.urls import reverse
 from rest_framework import status
 from apps.accounts.models import User
 from apps.inventory.models import StockMove
-from apps.inventory.tests.factories import (
+from apps.inventory.factories import (
     CompanyFactory,
     ProductFactory,
     LocationFactory,
     StockQuantFactory,
 )
-from apps.accounts.tests.factories import UserFactory
+from apps.accounts.factories import UserFactory
 
 
 pytestmark = pytest.mark.django_db

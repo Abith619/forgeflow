@@ -28,8 +28,7 @@ class StockMoveCreateView(APIView):
         serializer = StockMoveRequestSerializer(
             data=request.data, context={"request": request}
         )
-        if serializer:
-            serializer.is_valid(raise_exception=True)
+        serializer.is_valid(raise_exception=True)
 
         try:
             move, _source, _destination = move_stock(
