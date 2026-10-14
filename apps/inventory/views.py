@@ -1,10 +1,10 @@
+from apps.accounts.models import User
 from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework import status
 from rest_framework.exceptions import ValidationError as DRFValidationError
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
 from apps.core.mixins import CompanyScopedQuerysetMixin
 from apps.inventory.models import StockQuant
 from apps.inventory.serializers import (
@@ -13,9 +13,17 @@ from apps.inventory.serializers import (
     StockQuantSerializer,
 )
 from apps.inventory.services import move_stock
-
+from apps.accounts.permissions import HasRole
+from rest_framework.permissions import IsAuthenticated
 
 class StockMoveCreateView(APIView):
+    permission_classes = [IsAuthenticated, HasRole]
+    allowed_roles = [
+        User.Role.ADMIN,
+        User.Role.INVENTORY_MANAGER,
+        User.Role.OPERATOR,
+    ]
+
     def post(self, request):
         serializer = StockMoveRequestSerializer(
             data=request.data, context={"request": request}
@@ -39,5 +47,6 @@ class StockMoveCreateView(APIView):
 
 class StockQuantListView(CompanyScopedQuerysetMixin, ListAPIView):
     serializer_class = StockQuantSerializer
+    permission_classes = [IsAuthenticated]
 
     queryset = StockQuant.objects.select_related("product", "location")
