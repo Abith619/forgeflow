@@ -47,9 +47,7 @@ class RegisterSerializer(serializers.Serializer):
             )
 
             user = User.objects.create_user(
-                company=company,
-                **validated_data,
-                role=User.Role.ADMIN
+                company=company, **validated_data, role=User.Role.ADMIN
             )
 
         return user

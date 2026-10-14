@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models import Q
 
 from apps.accounts.models import Company
-from apps.core.models import TimeStampedModel
+from apps.core.models import CompanyOwnedModel, TimeStampedModel
 
 
 class UoM(TimeStampedModel):
@@ -42,7 +42,7 @@ class ProductCategory(TimeStampedModel):
         return self.name
 
 
-class Product(TimeStampedModel):
+class Product(CompanyOwnedModel, TimeStampedModel):
     name = models.CharField(max_length=100)
     ProductType_CHOICES = [
         ("storable", "Storable"),

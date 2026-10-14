@@ -19,11 +19,11 @@ class StockMoveRequestSerializer(serializers.Serializer):
         if request is None:
             return
 
-        company = request.user.company
+        company_id = getattr(request.user, "company_id", None)
 
-        self.fields["product"].queryset = Product.objects.filter(company=company)
-        self.fields["from_location"].queryset = Location.objects.filter(company=company)
-        self.fields["to_location"].queryset = Location.objects.filter(company=company)
+        self.fields["product"].queryset = Product.objects.for_company(company_id)
+        self.fields["from_location"].queryset = Location.objects.for_company(company_id)
+        self.fields["to_location"].queryset = Location.objects.for_company(company_id)
 
 
 class StockMoveSerializer(serializers.ModelSerializer):

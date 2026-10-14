@@ -1,17 +1,18 @@
 from decimal import Decimal
+
 import pytest
 from django.urls import reverse
 from rest_framework import status
+
+from apps.accounts.factories import UserFactory
 from apps.accounts.models import User
-from apps.inventory.models import StockMove
 from apps.inventory.factories import (
     CompanyFactory,
-    ProductFactory,
     LocationFactory,
+    ProductFactory,
     StockQuantFactory,
 )
-from apps.accounts.factories import UserFactory
-
+from apps.inventory.models import StockMove
 
 pytestmark = pytest.mark.django_db
 
@@ -62,6 +63,7 @@ def test_create_stock_move_by_role(
 
     if role == User.Role.VIEWER:
         assert StockMove.objects.count() == 0
+
 
 def test_anonymous_cannot_create_stock_move(api_client):
     response = api_client.post(
