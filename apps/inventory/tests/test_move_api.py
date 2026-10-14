@@ -63,6 +63,7 @@ def test_create_stock_move_by_role(
     if role == User.Role.VIEWER:
         assert StockMove.objects.count() == 0
 
+
 def test_anonymous_cannot_create_stock_move(api_client):
     response = api_client.post(
         reverse("stock-move-create"),

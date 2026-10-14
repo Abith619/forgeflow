@@ -1,5 +1,6 @@
 from rest_framework.permissions import BasePermission
 
+
 class HasRole(BasePermission):
     message = "Your role does not allow this action"
 

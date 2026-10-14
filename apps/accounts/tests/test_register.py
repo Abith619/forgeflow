@@ -9,6 +9,7 @@ pytestmark = pytest.mark.django_db
 
 User = get_user_model()
 
+
 def test_register_sets_httponly_refresh_cookie():
     client = APIClient()
 
@@ -53,6 +54,7 @@ def test_register_rejects_weak_password():
 
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert "password" in response.data
+
 
 def test_register_assigns_admin_role(api_client):
     payload = {

@@ -2,11 +2,10 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import F, Q
+from apps.core.models import TimeStampedModel, CompanyOwnedModel
 
-from apps.core.models import TimeStampedModel
 
-
-class Warehouse(TimeStampedModel):
+class Warehouse(CompanyOwnedModel, TimeStampedModel):
     company = models.ForeignKey("accounts.company", on_delete=models.PROTECT)
     name = models.CharField(max_length=255)
     code = models.CharField(max_length=255)
@@ -24,7 +23,7 @@ class Warehouse(TimeStampedModel):
         return f"{self.name} / {self.code}"
 
 
-class Location(TimeStampedModel):
+class Location(CompanyOwnedModel, TimeStampedModel):
     warehouse = models.ForeignKey("inventory.warehouse", on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     parent = models.ForeignKey(
@@ -58,7 +57,7 @@ class Location(TimeStampedModel):
         return f"{self.warehouse.name} / {self.parent.name if self.parent else None} / {self.name}"
 
 
-class StockQuant(TimeStampedModel):
+class StockQuant(CompanyOwnedModel, TimeStampedModel):
     product = models.ForeignKey("catalog.Product", on_delete=models.PROTECT)
     location = models.ForeignKey("inventory.Location", on_delete=models.PROTECT)
     company = models.ForeignKey("accounts.Company", on_delete=models.CASCADE)
@@ -103,7 +102,7 @@ class StockQuant(TimeStampedModel):
         return f"{self.location.name} / {self.product.name} / {self.quantity}"
 
 
-class StockMove(TimeStampedModel):
+class StockMove(CompanyOwnedModel, TimeStampedModel):
     product = models.ForeignKey(
         "catalog.Product", on_delete=models.PROTECT, related_name="stock_moves"
     )

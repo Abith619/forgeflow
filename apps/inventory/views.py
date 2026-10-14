@@ -16,6 +16,7 @@ from apps.inventory.services import move_stock
 from apps.accounts.permissions import HasRole
 from rest_framework.permissions import IsAuthenticated
 
+
 class StockMoveCreateView(APIView):
     permission_classes = [IsAuthenticated, HasRole]
     allowed_roles = [
