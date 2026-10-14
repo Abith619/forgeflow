@@ -1,4 +1,5 @@
 from rest_framework import serializers
+
 from apps.catalog.models import Product
 from apps.inventory.models import Location, StockMove, StockQuant
 

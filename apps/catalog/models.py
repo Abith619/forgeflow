@@ -1,7 +1,8 @@
 from django.db import models
 from django.db.models import Q
+
 from apps.accounts.models import Company
-from apps.core.models import TimeStampedModel, CompanyOwnedModel
+from apps.core.models import CompanyOwnedModel, TimeStampedModel
 
 
 class UoM(TimeStampedModel):

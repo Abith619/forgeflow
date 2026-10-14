@@ -1,10 +1,13 @@
-from apps.accounts.models import User
 from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework import status
 from rest_framework.exceptions import ValidationError as DRFValidationError
 from rest_framework.generics import ListAPIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from apps.accounts.models import User
+from apps.accounts.permissions import HasRole
 from apps.core.mixins import CompanyScopedQuerysetMixin
 from apps.inventory.models import StockQuant
 from apps.inventory.serializers import (
@@ -13,8 +16,6 @@ from apps.inventory.serializers import (
     StockQuantSerializer,
 )
 from apps.inventory.services import move_stock
-from apps.accounts.permissions import HasRole
-from rest_framework.permissions import IsAuthenticated
 
 
 class StockMoveCreateView(APIView):

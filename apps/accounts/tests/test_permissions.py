@@ -1,8 +1,8 @@
 import pytest
 from rest_framework.test import APIRequestFactory
-from apps.accounts.permissions import HasRole
-from apps.accounts.models import User
 
+from apps.accounts.models import User
+from apps.accounts.permissions import HasRole
 
 pytestmark = pytest.mark.django_db
 

@@ -1,8 +1,8 @@
 import pytest
-from apps.accounts.factories import CompanyFactory
-from apps.inventory.models import Warehouse
-from apps.inventory.factories import WarehouseFactory
 
+from apps.accounts.factories import CompanyFactory
+from apps.inventory.factories import WarehouseFactory
+from apps.inventory.models import Warehouse
 
 pytestmark = pytest.mark.django_db
 
@@ -25,4 +25,3 @@ def test_for_company_none_returns_no_warehouses():
     result = Warehouse.objects.for_company(None)
 
     assert result.exists() is False
-

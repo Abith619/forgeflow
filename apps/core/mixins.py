@@ -1,5 +1,4 @@
 class CompanyScopedQuerysetMixin:
-
     def get_queryset(self):
         qs = super().get_queryset()
         company_id = getattr(self.request.user, "company_id", None)

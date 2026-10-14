@@ -1,4 +1,5 @@
 import pytest
+from rest_framework.test import APIClient
 
 from apps.accounts.factories import CompanyFactory, UserFactory
 from apps.catalog.factories import ProductFactory, UoMFactory
@@ -7,7 +8,6 @@ from apps.inventory.factories import (
     StockQuantFactory,
     WarehouseFactory,
 )
-from rest_framework.test import APIClient
 
 
 @pytest.fixture
