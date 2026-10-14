@@ -49,6 +49,7 @@ class RegisterSerializer(serializers.Serializer):
             user = User.objects.create_user(
                 company=company,
                 **validated_data,
+                role=User.Role.ADMIN
             )
 
         return user
@@ -65,7 +66,7 @@ class MeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["id", "email", "full_name", "company"]
+        fields = ["id", "email", "full_name", "company", "role"]
 
 
 class LoginSerializer(serializers.Serializer):

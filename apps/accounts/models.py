@@ -6,7 +6,6 @@ from django.contrib.auth.models import (
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
-
 from apps.core.models import TimeStampedModel
 
 
@@ -64,6 +63,18 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    class Role(models.TextChoices):
+        ADMIN = "admin", "Admin"
+        INVENTORY_MANAGER = "inventory_manager", "Inventory Manager"
+        OPERATOR = "operator", "Operator"
+        VIEWER = "viewer", "Viewer"
+
+    role = models.CharField(
+        max_length=30,
+        choices=Role.choices,
+        default=Role.VIEWER,
+    )
+
     email = models.EmailField(unique=True)
     full_name = models.CharField(max_length=150, blank=False)
     company = models.ForeignKey(
@@ -79,3 +90,4 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+

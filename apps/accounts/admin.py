@@ -21,9 +21,10 @@ class UserAdmin(BaseUserAdmin):
         "is_active",
         "is_staff",
         "date_joined",
+        "role"
     ]
     search_fields = ["email", "full_name"]
-    list_filter = ["is_active", "is_staff", "date_joined"]
+    list_filter = ["is_active", "is_staff", "date_joined", "role"]
 
     fieldsets = (
         (None, {"fields": ("email", "password")}),
