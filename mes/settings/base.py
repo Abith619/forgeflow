@@ -112,3 +112,7 @@ SIMPLE_JWT = {
 REFRESH_COOKIE_NAME = "refresh_token"
 REFRESH_COOKIE_PATH = "/api/accounts/"
 REFRESH_COOKIE_SECURE = env.bool("REFRESH_COOKIE_SECURE", default=True)
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173",
+]
