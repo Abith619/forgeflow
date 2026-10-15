@@ -1,4 +1,4 @@
-import { APP_NAME } from './shared/lib/app-name';
+import { APP_NAME } from '@/shared/lib/app-name';
 
 function App() {
   return (
